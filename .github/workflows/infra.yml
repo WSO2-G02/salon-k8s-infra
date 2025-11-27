@@ -1,0 +1,52 @@
+name: Infrastructure
+
+on:
+  workflow_dispatch:   # This allow manual run
+  push:
+    branches:
+      - main
+    paths:
+      - 'terraform/**'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  infra:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Configure AWS Credentials via OIDC
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::024955634588:role/GitHubActionsInfraRole
+        aws-region: ap-south-1
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+
+    - name: Terraform Init
+      working-directory: terraform
+      run: terraform init
+
+    - name: Terraform Format
+      working-directory: terraform
+      run: terraform fmt -check
+
+    - name: Terraform Validate
+      working-directory: terraform
+      run: terraform validate
+
+    - name: Terraform Plan
+      working-directory: terraform
+      run: terraform plan
+
+    # OPTIONAL — only run manually!
+    # - name: Terraform Apply
+    #   if: github.event_name == 'workflow_dispatch'
+    #   working-directory: terraform
+    #   run: terraform apply -auto-approve
