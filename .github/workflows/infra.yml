@@ -1,7 +1,7 @@
 name: Infrastructure
 
 on:
-  workflow_dispatch:   # This allow manual run
+  workflow_dispatch:   # This allows manual run
   push:
     branches:
       - main
