@@ -7,7 +7,7 @@ locals {
   services = [
     "user_service",
     "appointment_service",
-    "service_managemnet",
+    "service_management",
     "staff_management",
     "notification_service",
     "reports_analytics",
