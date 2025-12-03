@@ -1,7 +1,7 @@
 name: Infrastructure
 
 on:
-  workflow_dispatch:   # This allow manual run
+  workflow_dispatch:   # This allows manual run
   push:
     branches:
       - main
@@ -29,6 +29,10 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
 
+    - name: Check Terraform version
+      working-directory: terraform
+      run: terraform version
+
     - name: Terraform Init
       working-directory: terraform
       run: terraform init
@@ -43,10 +47,10 @@ jobs:
 
     - name: Terraform Plan
       working-directory: terraform
-      run: terraform plan
+      run: terraform plan -out=tfplan # Saves the plan to a file
 
     # OPTIONAL — only run manually!
     # - name: Terraform Apply
     #   if: github.event_name == 'workflow_dispatch'
     #   working-directory: terraform
-    #   run: terraform apply -auto-approve
+    #   run: terraform apply "tfplan" -auto-approve
