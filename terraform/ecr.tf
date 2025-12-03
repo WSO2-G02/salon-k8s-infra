@@ -1,8 +1,3 @@
-variable "project_tag" {
-  type    = string
-  default = "salon-booking-system"
-}
-
 locals {
   services = [
     "user_service",
