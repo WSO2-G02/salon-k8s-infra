@@ -47,7 +47,7 @@ jobs:
 
     - name: Terraform Import
       working-directory: terraform
-      run: terraform import aws_security_group.ec2_sg sg-089991365eb05aae8
+      run: terraform import -v aws_security_group.ec2_sg sg-089991365eb05aae8
 
     - name: Terraform Plan
       working-directory: terraform
