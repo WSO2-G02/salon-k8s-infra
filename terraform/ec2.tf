@@ -25,9 +25,9 @@ resource "aws_launch_template" "app_lt" {
 
   tag_specifications {
     resource_type = "instance"
-
     tags = {
       Project = var.project_tag
+      Role    = "k8s-node"
       Name    = "${var.project_name}-instance"
     }
   }
