@@ -14,7 +14,7 @@ resource "aws_subnet" "public" {
 
 # Private subnets
 resource "aws_subnet" "private" {
-  for_each   = toset(var.private_subnets)
+  for_each   = { for idx, cidr in var.private_subnets : idx => cidr }
   vpc_id     = aws_vpc.main.id
   cidr_block = each.value
 
