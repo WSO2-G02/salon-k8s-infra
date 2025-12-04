@@ -33,7 +33,7 @@ variable "private_subnets" {
 # List of Microservices
 
 variable "services" {
-  type    = list(string)
+  type = list(string)
   default = [
     "user_service",
     "appointment_service",
@@ -51,6 +51,6 @@ variable "instance_type" {
 }
 
 variable "ami_id" {
-  type    = string
+  type        = string
   description = "AMI ID for EC2 instances"
 }
