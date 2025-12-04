@@ -13,6 +13,7 @@ variable "project_tag" {
   default = "salon-booking-system"
 }
 
+# VPC and Subnet variables
 
 variable "vpc_cidr" {
   type    = string
@@ -28,6 +29,8 @@ variable "private_subnets" {
   type    = list(string)
   default = ["172.31.10.0/24", "172.31.11.0/24"]
 }
+
+# List of Microservices
 
 variable "services" {
   type    = list(string)
