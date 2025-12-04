@@ -72,7 +72,7 @@ variable "desired_capacity" {
   default = 2
 }
 
-variable "ssh_source_cidr" {
+variable "github_actions_ips" {
   type        = string
   description = "Source IP allowed for SSH access (with /32)"
   default     = "203.0.113.25/32"
