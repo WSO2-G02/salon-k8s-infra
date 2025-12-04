@@ -45,10 +45,6 @@ jobs:
       working-directory: terraform
       run: terraform validate
 
-    - name: Terraform Import
-      working-directory: terraform
-      run: terraform import -v aws_security_group.ec2_sg sg-089991365eb05aae8
-
     - name: Terraform Plan
       working-directory: terraform
       run: terraform plan -out=tfplan # Saves the plan to a file
