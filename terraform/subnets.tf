@@ -1,12 +1,12 @@
 # Public subnets
 resource "aws_subnet" "public" {
-  for_each                = toset(var.public_subnets)
+  for_each                = { for idx, cidr in var.public_subnets : idx => cidr }
   vpc_id                  = aws_vpc.main.id
   cidr_block              = each.value
   map_public_ip_on_launch = true
 
   tags = {
-    Name    = "${var.project_name}-public-${each.key}"
+    Name    = "${var.project_name}-public-${each.key + 1}"
     Project = var.project_tag
     Tier    = "public"
   }
@@ -19,7 +19,7 @@ resource "aws_subnet" "private" {
   cidr_block = each.value
 
   tags = {
-    Name    = "${var.project_name}-private-${each.key}"
+    Name    = "${var.project_name}-private-${each.key + 1}"
     Project = var.project_tag
     Tier    = "private"
   }

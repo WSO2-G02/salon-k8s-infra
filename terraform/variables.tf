@@ -54,3 +54,26 @@ variable "ami_id" {
   type        = string
   description = "AMI ID for EC2 instances"
 }
+
+# Autoscaling variables
+
+variable "min_size" {
+  type    = number
+  default = 3
+}
+
+variable "max_size" {
+  type    = number
+  default = 5
+}
+
+variable "desired_capacity" {
+  type    = number
+  default = 2
+}
+
+variable "ssh_source_cidr" {
+  type        = string
+  description = "Source IP allowed for SSH access (with /32)"
+  default     = "203.0.113.25/32"
+}

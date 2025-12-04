@@ -1,12 +1,44 @@
-resource "aws_instance" "services" {
-  for_each = toset(var.services)
-
-  ami           = var.ami_id
+resource "aws_launch_template" "app_lt" {
+  name_prefix   = "${var.project_name}-lt"
+  image_id      = var.ami_id
   instance_type = var.instance_type
-  subnet_id     = element(aws_subnet.public[*].id, 0) # round-robin or choose AZ
 
-  tags = {
-    Name    = "${each.key}-instance"
-    Project = var.project_tag
+  iam_instance_profile {
+    name = aws_iam_instance_profile.ec2_profile.name
   }
+
+  vpc_security_group_ids = [aws_security_group.ec2_sg.id]
+
+  user_data = filebase64("user_data.sh")
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Project = var.project_tag
+      Name    = "${var.project_name}-instance"
+    }
+  }
+}
+
+
+resource "aws_autoscaling_group" "app_asg" {
+  desired_capacity    = var.desired_capacity
+  min_size            = var.min_size
+  max_size            = var.max_size
+  vpc_zone_identifier = [for s in aws_subnet.public : s.id]
+
+  launch_template {
+    id      = aws_launch_template.app_lt.id
+    version = "$Latest"
+  }
+
+  tag {
+    key                 = "Project"
+    value               = var.project_tag
+    propagate_at_launch = true
+  }
+
+  health_check_type         = "EC2"
+  health_check_grace_period = 300
 }
