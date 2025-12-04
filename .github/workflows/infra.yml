@@ -54,3 +54,8 @@ jobs:
     #   if: github.event_name == 'workflow_dispatch'
     #   working-directory: terraform
     #   run: terraform apply "tfplan" -auto-approve
+    
+    - name: Terraform Output
+      working-directory: terraform
+      run: terraform output -json ec2_private_ips | jq -r '.[]' > inventory.ini # Saves EC2 IPs to a file
+

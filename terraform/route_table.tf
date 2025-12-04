@@ -6,6 +6,12 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.igw.id
   }
 
+  depends_on = [
+    aws_vpc.main,
+    aws_subnet.public,
+    aws_subnet.private
+  ]
+
   tags = {
     Name = "${var.project_name}-public-rt"
   }

@@ -113,6 +113,10 @@ resource "aws_security_group" "ec2_sg" {
     description = "Allow all outbound traffic"
   }
 
+  depends_on = [
+    aws_vpc.main
+  ]
+
   tags = {
     Name    = "${var.project_name}-k8s-sg"
     Project = var.project_tag
@@ -148,4 +152,14 @@ resource "aws_security_group" "elb_sg" {
     protocol    = "-1"
     cidr_blocks = [var.vpc_cidr] # allow outbound to nodes
   }
+
+  depends_on = [
+    aws_vpc.main
+  ]
+
+  tags = {
+    Name    = "${var.project_name}-elb-sg"
+    Project = var.project_tag
+  }
+
 }
