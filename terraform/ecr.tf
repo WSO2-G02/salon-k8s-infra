@@ -1,17 +1,5 @@
-locals {
-  services = [
-    "user_service",
-    "appointment_service",
-    "service_management",
-    "staff_management",
-    "notification_service",
-    "reports_analytics",
-    "frontend"
-  ]
-}
-
 resource "aws_ecr_repository" "repos" {
-  for_each = toset(local.services)
+  for_each = toset(var.services)
 
   name                 = each.key
   image_tag_mutability = "MUTABLE"

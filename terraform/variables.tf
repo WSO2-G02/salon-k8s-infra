@@ -12,3 +12,42 @@ variable "project_tag" {
   type    = string
   default = "salon-booking-system"
 }
+
+
+variable "vpc_cidr" {
+  type    = string
+  default = "172.31.0.0/16"
+}
+
+variable "public_subnets" {
+  type    = list(string)
+  default = ["172.31.1.0/24", "172.31.2.0/24"]
+}
+
+variable "private_subnets" {
+  type    = list(string)
+  default = ["172.31.10.0/24", "172.31.11.0/24"]
+}
+
+variable "services" {
+  type    = list(string)
+  default = [
+    "user_service",
+    "appointment_service",
+    "service_management",
+    "staff_management",
+    "notification_service",
+    "reports_analytics",
+    "frontend"
+  ]
+}
+
+variable "instance_type" {
+  type    = string
+  default = "t3.micro"
+}
+
+variable "ami_id" {
+  type    = string
+  description = "AMI ID for EC2 instances"
+}
