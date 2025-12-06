@@ -4,7 +4,7 @@ resource "aws_launch_template" "app_lt" {
   instance_type = var.instance_type
 
   iam_instance_profile {
-    name = aws_iam_instance_profile.ec2_profile.name
+    name = aws_iam_instance_profile.ssm_profile.name
   }
 
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
@@ -12,15 +12,12 @@ resource "aws_launch_template" "app_lt" {
   user_data = filebase64("user_data.sh")
 
   depends_on = [
-    aws_vpc.main,
-    aws_subnet.public,
-    aws_subnet.private,
     aws_route_table.public,
     aws_security_group.elb_sg,
     aws_security_group.ec2_sg,
-    aws_iam_role.ec2_role,
-    aws_iam_role_policy_attachment.ecr_access,
-    aws_iam_instance_profile.ec2_profile
+    aws_iam_role.ssm_ec2_role,
+    aws_iam_role_policy_attachment.ssm_core,
+    aws_iam_role_policy_attachment.ecr_read
   ]
 
   tag_specifications {

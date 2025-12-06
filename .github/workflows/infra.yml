@@ -49,14 +49,15 @@ jobs:
       working-directory: terraform
       run: terraform plan -out=tfplan # Saves the plan to a file
 
-    # OPTIONAL — only run manually!
-    # - name: Terraform Apply
-    #   if: github.event_name == 'workflow_dispatch'
-    #   working-directory: terraform
-    #   run: terraform apply "tfplan" -auto-approve
+#     OPTIONAL — only run manually!
+    - name: Terraform Apply
+      if: github.event_name == 'workflow_dispatch'
+      working-directory: terraform
+      run: terraform apply "tfplan" -auto-approve
     
     # Must be run after terraform apply
-    # - name: Terraform Output
-    #  working-directory: terraform
-    #  run: terraform output -json ec2_private_ips | jq -r '.[]' > inventory.ini # Saves EC2 IPs to a file
+    - name: Terraform Output
+      if: github.event_name == 'workflow_dispatch'
+      working-directory: terraform
+      run: terraform output -json ec2_private_ips | jq -r '.[]' > inventory.ini # Saves EC2 IPs to a file
 

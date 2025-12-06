@@ -9,7 +9,7 @@ resource "aws_security_group" "ec2_sg" {
     from_port   = 6443
     to_port     = 6443
     protocol    = "tcp"
-    cidr_blocks = [var.github_actions_ips]
+    cidr_blocks = [var.vpc_cidr]
     description = "Kubernetes API (control plane)"
   }
 
@@ -71,16 +71,6 @@ resource "aws_security_group" "ec2_sg" {
     protocol    = "4"
     cidr_blocks = [var.vpc_cidr]
     description = "Calico IP-in-IP traffic"
-  }
-
-  # SSH (22 TCP)
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [var.github_actions_ips]
-    description = "SSH access to EC2"
   }
 
   # BGP (179 TCP)

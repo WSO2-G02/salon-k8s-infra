@@ -21,3 +21,11 @@ output "ec2_public_ips" {
 output "ec2_private_ips" {
   value = data.aws_instances.asg_nodes.private_ips
 }
+
+output "k8s_node_instance_ids" {
+  value = data.aws_instances.asg_nodes.ids
+}
+
+output "asg_name" {
+  value = aws_autoscaling_group.app_asg.name
+}

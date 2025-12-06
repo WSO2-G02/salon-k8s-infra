@@ -1,5 +1,5 @@
-resource "aws_iam_role" "ec2_role" {
-  name = "${var.project_name}-ec2-role"
+resource "aws_iam_role" "ssm_ec2_role" {
+  name = "${var.project_name}-ssm-ec2-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -11,12 +11,18 @@ resource "aws_iam_role" "ec2_role" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "ecr_access" {
-  role       = aws_iam_role.ec2_role.name
+# SSM + ECR
+resource "aws_iam_role_policy_attachment" "ssm_core" {
+  role       = aws_iam_role.ssm_ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_role_policy_attachment" "ecr_read" {
+  role       = aws_iam_role.ssm_ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
-resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "${var.project_name}-instance-profile"
-  role = aws_iam_role.ec2_role.name
+resource "aws_iam_instance_profile" "ssm_profile" {
+  name = "${var.project_name}-ssm-instance-profile"
+  role = aws_iam_role.ssm_ec2_role.name
 }

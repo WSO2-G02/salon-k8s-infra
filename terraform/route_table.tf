@@ -7,7 +7,6 @@ resource "aws_route_table" "public" {
   }
 
   depends_on = [
-    aws_vpc.main,
     aws_subnet.public,
     aws_subnet.private
   ]
