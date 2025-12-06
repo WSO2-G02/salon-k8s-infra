@@ -48,6 +48,10 @@ jobs:
     - name: Terraform Plan
       working-directory: terraform
       run: terraform plan -out=tfplan # Saves the plan to a file
+    
+    - name: Terraform Destroy
+      working-directory: terraform
+      run: terraform destroy -auto-approve # Destroys created resources
 
 #     OPTIONAL — only run manually!
     - name: Terraform Apply
