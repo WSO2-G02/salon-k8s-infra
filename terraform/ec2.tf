@@ -15,9 +15,7 @@ resource "aws_launch_template" "app_lt" {
     aws_route_table.public,
     aws_security_group.elb_sg,
     aws_security_group.ec2_sg,
-    aws_iam_role.ssm_ec2_role,
-    aws_iam_role_policy_attachment.ssm_core,
-    aws_iam_role_policy_attachment.ecr_read
+    aws_iam_instance_profile.ssm_profile.name
   ]
 
   tag_specifications {
@@ -48,9 +46,7 @@ resource "aws_autoscaling_group" "app_asg" {
     aws_route_table.public,
     aws_security_group.elb_sg,
     aws_security_group.ec2_sg,
-    aws_iam_role.ssm_ec2_role,
-    aws_iam_role_policy_attachment.ssm_core,
-    aws_iam_role_policy_attachment.ecr_read
+    aws_iam_instance_profile.ssm_profile.name
   ]
 
   tag {

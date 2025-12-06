@@ -78,3 +78,9 @@ variable "github_actions_ips" {
   description = "Source IP allowed for SSH access (with /32)"
   default     = "203.0.113.25/32"
 }
+
+# Reference an existing IAM role for SSM + ECR access
+variable "ssm_role_name" {
+  type        = string
+  description = "The name of an existing IAM role with AmazonSSMManagedInstanceCore and ECR read-only policies"
+}
