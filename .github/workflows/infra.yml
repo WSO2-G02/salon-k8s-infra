@@ -45,9 +45,9 @@ jobs:
       working-directory: terraform
       run: terraform validate
 
-    - name: Terraform Plan
-      working-directory: terraform
-      run: terraform plan -out=tfplan # Saves the plan to a file
+#    - name: Terraform Plan
+#      working-directory: terraform
+#      run: terraform plan -out=tfplan # Saves the plan to a file
     
     - name: Terraform Destroy
       working-directory: terraform

@@ -93,7 +93,7 @@ resource "aws_security_group" "ec2_sg" {
     description     = "HTTP traffic from LoadBalancer"
   }
 
-  # Allow all outbound
+  # Allow all Outbound
 
   egress {
     from_port   = 0
