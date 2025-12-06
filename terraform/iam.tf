@@ -1,4 +1,4 @@
-# Uses Existing IAM role
+# Uses Existing IAM 
 resource "aws_iam_instance_profile" "ssm_profile" {
   name = "${var.project_name}-ssm-instance-profile"
   role = var.ssm_role_name
