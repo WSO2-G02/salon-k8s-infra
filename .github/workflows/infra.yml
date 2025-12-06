@@ -37,9 +37,9 @@ jobs:
       working-directory: terraform
       run: terraform init
 
-    - name: Terraform Force Unlock
-      working-directory: terraform
-      run: terraform force-unlock -force 2b1d4c9c-7af7-3e73-4a37-e9ee4d4021a1 
+#    - name: Terraform Force Unlock
+#      working-directory: terraform
+#      run: terraform force-unlock -force 2b1d4c9c-7af7-3e73-4a37-e9ee4d4021a1 
 
     - name: Terraform Format
       working-directory: terraform
@@ -49,13 +49,13 @@ jobs:
       working-directory: terraform
       run: terraform validate
 
-#    - name: Terraform Plan
-#      working-directory: terraform
-#      run: terraform plan -out=tfplan # Saves the plan to a file
-    
-    - name: Terraform Destroy
+    - name: Terraform Plan
       working-directory: terraform
-      run: terraform destroy -auto-approve # Destroys created resources
+      run: terraform plan -out=tfplan # Saves the plan to a file
+    
+#    - name: Terraform Destroy
+#      working-directory: terraform
+#      run: terraform destroy -auto-approve # Destroys created resources
 
 #     OPTIONAL — only run manually!
     - name: Terraform Apply
