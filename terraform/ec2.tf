@@ -45,15 +45,12 @@ resource "aws_autoscaling_group" "app_asg" {
 
 
   depends_on = [
-    aws_vpc.main,
-    aws_subnet.public,
-    aws_subnet.private,
     aws_route_table.public,
     aws_security_group.elb_sg,
     aws_security_group.ec2_sg,
-    aws_iam_role.ec2_role,
-    aws_iam_role_policy_attachment.ecr_access,
-    aws_iam_instance_profile.ec2_profile
+    aws_iam_role.ssm_ec2_role,
+    aws_iam_role_policy_attachment.ssm_core,
+    aws_iam_role_policy_attachment.ecr_read
   ]
 
   tag {
