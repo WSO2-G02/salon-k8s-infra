@@ -83,4 +83,5 @@ variable "github_actions_ips" {
 variable "ssm_role_name" {
   type        = string
   description = "The name of an existing IAM role with AmazonSSMManagedInstanceCore and ECR read-only policies"
+  default     = "aaaa"
 }
