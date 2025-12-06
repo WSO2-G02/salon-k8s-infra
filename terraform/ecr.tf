@@ -11,7 +11,7 @@ resource "aws_ecr_repository" "repos" {
   encryption_configuration {
     encryption_type = "AES256"
   }
-  
+
   depends_on = [
     aws_vpc.main
   ]
