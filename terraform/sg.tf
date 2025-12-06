@@ -83,7 +83,7 @@ resource "aws_security_group" "ec2_sg" {
     description = "BGP routing (Calico or other)"
   }
 
-  # HTTP Traffic from LoadBalancer a
+  # HTTP Traffic from LoadBalancer
 
   ingress {
     from_port       = 80
