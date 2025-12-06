@@ -39,7 +39,7 @@ jobs:
 
     - name: Terraform Force Unlock
       working-directory: terraform
-      run: terraform force-unlock 2b1d4c9c-7af7-3e73-4a37-e9ee4d4021a1 -auto-approve
+      run: terraform force-unlock -auto-approve 2b1d4c9c-7af7-3e73-4a37-e9ee4d4021a1 
 
     - name: Terraform Format
       working-directory: terraform
