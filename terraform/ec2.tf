@@ -46,7 +46,7 @@ resource "aws_autoscaling_group" "app_asg" {
     aws_route_table.public,
     aws_security_group.elb_sg,
     aws_security_group.ec2_sg,
-    aws_iam_instance_profile.ssm_profile.name
+    aws_iam_instance_profile.ssm_profile
   ]
 
   tag {
