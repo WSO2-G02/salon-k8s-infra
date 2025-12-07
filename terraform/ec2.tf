@@ -44,7 +44,8 @@ resource "aws_autoscaling_group" "app_asg" {
   depends_on = [
     aws_route_table.public,
     aws_security_group.elb_sg,
-    aws_security_group.ec2_sg
+    aws_security_group.ec2_sg,
+    aws_launch_template.app_lt
   ]
 
   tag {
