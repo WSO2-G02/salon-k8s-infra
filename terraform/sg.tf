@@ -53,7 +53,7 @@ resource "aws_security_group" "ec2_sg" {
     description = "ETCD Database Communication"
   }
 
-  # Kubelet, Scheduler, Controller-Manager (10250-10252 TCP)
+  # Kubelet, Scheduler, Controller/Manager (10250-10252 TCP)
 
   ingress {
     from_port   = 10250
