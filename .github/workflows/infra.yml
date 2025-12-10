@@ -37,6 +37,10 @@ jobs:
       working-directory: terraform
       run: terraform init
 
+#    - name: Terraform Force Unlock
+#      working-directory: terraform
+#      run: terraform force-unlock -force c91518ea-768c-caec-2f18-f0fe02eebe47
+
     - name: Terraform Format
       working-directory: terraform
       run: terraform fmt -check
@@ -45,16 +49,16 @@ jobs:
       working-directory: terraform
       run: terraform validate
 
-    - name: Terraform Import
-      working-directory: terraform
-      run: terraform import -v aws_security_group.ec2_sg sg-089991365eb05aae8
-
     - name: Terraform Plan
       working-directory: terraform
       run: terraform plan -out=tfplan # Saves the plan to a file
+    
+#    - name: Terraform Destroy
+#      working-directory: terraform
+#      run: terraform destroy -auto-approve # Destroys created resources
 
-    # OPTIONAL — only run manually!
-    # - name: Terraform Apply
-    #   if: github.event_name == 'workflow_dispatch'
-    #   working-directory: terraform
-    #   run: terraform apply "tfplan" -auto-approve
+#     OPTIONAL — only run manually!
+    - name: Terraform Apply
+      if: github.event_name == 'workflow_dispatch'
+      working-directory: terraform
+      run: terraform apply -auto-approve tfplan

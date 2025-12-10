@@ -3,13 +3,17 @@ output "vpc_id" {
 }
 
 output "public_subnet_ids" {
-  value = aws_subnet.public[*].id
+  value = [for s in aws_subnet.public : s.id]
 }
 
 output "private_subnet_ids" {
-  value = aws_subnet.private[*].id
+  value = [for s in aws_subnet.private : s.id]
 }
 
 output "ecr_repository_arns" {
   value = [for r in aws_ecr_repository.repos : r.arn]
+}
+
+output "asg_name" {
+  value = aws_autoscaling_group.app_asg.name
 }

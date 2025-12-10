@@ -1,6 +1,6 @@
 variable "region" {
   type    = string
-  default = "eu-north-1" # replace as necessary
+  default = "ap-south-1" # replace as necessary
 }
 
 variable "project_name" {
@@ -17,17 +17,17 @@ variable "project_tag" {
 
 variable "vpc_cidr" {
   type    = string
-  default = "172.31.0.0/16"
+  default = "10.0.0.0/16"
 }
 
 variable "public_subnets" {
   type    = list(string)
-  default = ["172.31.1.0/24", "172.31.2.0/24"]
+  default = ["10.0.1.0/24", "10.0.2.0/24"]
 }
 
 variable "private_subnets" {
   type    = list(string)
-  default = ["172.31.10.0/24", "172.31.11.0/24"]
+  default = ["10.0.10.0/24", "10.0.11.0/24"]
 }
 
 # List of Microservices
@@ -47,12 +47,13 @@ variable "services" {
 
 variable "instance_type" {
   type    = string
-  default = "t3.micro"
+  default = "t3.large"
 }
 
 variable "ami_id" {
   type        = string
   description = "AMI ID for EC2 instances"
+  default     = "ami-0ade68f094cc81635"
 }
 
 # Autoscaling variables
@@ -64,16 +65,17 @@ variable "min_size" {
 
 variable "max_size" {
   type    = number
-  default = 5
+  default = 6
 }
 
 variable "desired_capacity" {
   type    = number
-  default = 2
+  default = 4
 }
 
-variable "ssh_source_cidr" {
+# Reference an existing instance profile
+variable "ssm_instance_profile_name" {
   type        = string
-  description = "Source IP allowed for SSH access (with /32)"
-  default     = "203.0.113.25/32"
+  description = "The name of the instance profile used to access EC2 instances"
+  default     = "salon-app-ssm-ec2-role"
 }

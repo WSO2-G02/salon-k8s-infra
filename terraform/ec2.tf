@@ -4,21 +4,28 @@ resource "aws_launch_template" "app_lt" {
   instance_type = var.instance_type
 
   iam_instance_profile {
-    name = aws_iam_instance_profile.ec2_profile.name
+    name = var.ssm_instance_profile_name
   }
 
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
 
   user_data = filebase64("user_data.sh")
 
+  depends_on = [
+    aws_route_table.public,
+    aws_security_group.elb_sg,
+    aws_security_group.ec2_sg
+  ]
+
   tag_specifications {
     resource_type = "instance"
-
     tags = {
       Project = var.project_tag
+      Role    = "k8s-node"
       Name    = "${var.project_name}-instance"
     }
   }
+
 }
 
 
@@ -32,6 +39,14 @@ resource "aws_autoscaling_group" "app_asg" {
     id      = aws_launch_template.app_lt.id
     version = "$Latest"
   }
+
+
+  depends_on = [
+    aws_route_table.public,
+    aws_security_group.elb_sg,
+    aws_security_group.ec2_sg,
+    aws_launch_template.app_lt
+  ]
 
   tag {
     key                 = "Project"

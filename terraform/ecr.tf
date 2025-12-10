@@ -12,6 +12,10 @@ resource "aws_ecr_repository" "repos" {
     encryption_type = "AES256"
   }
 
+  depends_on = [
+    aws_vpc.main
+  ]
+
   tags = {
     Project = var.project_tag
     Service = each.key
