@@ -74,7 +74,7 @@ resource "null_resource" "generate_inventory" {
   depends_on = [aws_autoscaling_group.app_asg, data.aws_instances.asg_instances]
 
   provisioner "local-exec" {
-    command = "bash generate_inventory.sh"
+    command     = "bash generate_inventory.sh"
     working_dir = path.module
   }
 
