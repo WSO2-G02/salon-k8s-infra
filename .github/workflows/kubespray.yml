@@ -1,0 +1,8 @@
+kubespray:
+  use_ssm: true
+  ssm_document: "AWS-RunShellScript"
+  inventory_template: "inventory/mycluster/hosts.yaml.j2"
+
+inventory:
+  hosts:
+    ip_source: "terraform.k8s_node_private_ips"
