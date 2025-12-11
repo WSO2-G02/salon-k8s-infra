@@ -17,3 +17,11 @@ output "ecr_repository_arns" {
 output "asg_name" {
   value = aws_autoscaling_group.app_asg.name
 }
+
+output "k8s_node_private_ips" {
+  value = data.aws_instances.k8s_nodes.private_ips
+}
+
+output "k8s_node_instance_ids" {
+  value = data.aws_instances.k8s_nodes.ids
+}
