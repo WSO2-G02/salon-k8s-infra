@@ -2,6 +2,7 @@ resource "aws_launch_template" "app_lt" {
   name_prefix   = "${var.project_name}-lt"
   image_id      = var.ami_id
   instance_type = var.instance_type
+  key_name      = aws_key_pair.salon_key.key_name
 
   iam_instance_profile {
     name = var.ssm_instance_profile_name
@@ -56,4 +57,28 @@ resource "aws_autoscaling_group" "app_asg" {
 
   health_check_type         = "EC2"
   health_check_grace_period = 300
+}
+
+data "aws_instances" "asg_instances" {
+  filter {
+    name   = "tag:aws:autoscaling:groupName"
+    values = [aws_autoscaling_group.app_asg.name]
+  }
+
+  instance_state_names = ["running"]
+
+  depends_on = [aws_autoscaling_group.app_asg]
+}
+
+resource "null_resource" "generate_inventory" {
+  depends_on = [aws_autoscaling_group.app_asg, data.aws_instances.asg_instances]
+
+  provisioner "local-exec" {
+    command = "bash generate_inventory.sh"
+    working_dir = path.module
+  }
+
+  triggers = {
+    instance_ids = join(",", data.aws_instances.asg_instances.ids)
+  }
 }

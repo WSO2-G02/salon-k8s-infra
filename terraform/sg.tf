@@ -3,6 +3,15 @@ resource "aws_security_group" "ec2_sg" {
   vpc_id      = aws_vpc.main.id
   description = "Security group for Kubernetes cluster nodes and microservices"
 
+  # SSH (22 TCP) - Required for Ansible/administration
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "SSH access for administration"
+  }
+
   # Kubernetes API (6443 TCP)
 
   ingress {

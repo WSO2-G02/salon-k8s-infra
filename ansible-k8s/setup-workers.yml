@@ -1,7 +1,0 @@
----
-- hosts: workers
-  become: yes
-  roles:
-    - common
-    - worker
-

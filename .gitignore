@@ -1,0 +1,62 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+tfplan
+
+# SSH Keys - CRITICAL: Never commit private keys
+*.pem
+*.key
+!*.pub
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+
+# Ansible
+*.retry
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Kubespray
+kubespray/inventory/*/artifacts/
+
+# Terraform binaries and zips
+terraform/terraform
+terraform/terraform_*
+terraform/*.zip
+
+# Temporary files
+*.tmp
+*.bak

@@ -1,0 +1,102 @@
+#!/bin/bash
+
+set -e  # Exit on error
+
+echo "=========================================="
+echo "Kubernetes Cluster Deployment Automation"
+echo "=========================================="
+echo ""
+
+# Step 1: Deploy Infrastructure
+echo "📦 Step 1: Deploying AWS Infrastructure with Terraform..."
+cd terraform
+
+if [ ! -f "terraform.tfstate" ]; then
+    echo "Initializing Terraform..."
+    terraform init
+fi
+
+echo "Planning infrastructure..."
+terraform plan -out=tfplan
+
+read -p "Apply Terraform plan? (yes/no): " APPLY
+if [ "$APPLY" == "yes" ]; then
+    terraform apply tfplan
+    rm tfplan
+else
+    echo "Skipping Terraform apply."
+    exit 0
+fi
+
+# Step 2: Wait for instances to be ready
+echo ""
+echo "⏳ Step 2: Waiting for instances to be ready..."
+sleep 30
+
+# Step 3: Generate inventory (already triggered by Terraform null_resource)
+echo ""
+echo "📝 Step 3: Verifying inventory generation..."
+if [ -f "../kubespray/inventory/mycluster/hosts.yaml" ]; then
+    echo "✓ Inventory file found"
+    cat ../kubespray/inventory/mycluster/hosts.yaml
+else
+    echo "✗ Inventory not found. Running generation manually..."
+    bash generate_inventory.sh
+fi
+
+# Step 4: Test connectivity
+echo ""
+echo "🔌 Step 4: Testing SSH connectivity to nodes..."
+cd ../kubespray
+ansible all -i inventory/mycluster/hosts.yaml -m ping
+
+if [ $? -ne 0 ]; then
+    echo "⚠️  Warning: Some nodes are not reachable. Check SSH keys and security groups."
+    read -p "Continue anyway? (yes/no): " CONTINUE
+    if [ "$CONTINUE" != "yes" ]; then
+        exit 1
+    fi
+fi
+
+# Step 5: Deploy Kubernetes with Kubespray
+echo ""
+echo "🚀 Step 5: Deploying Kubernetes cluster with Kubespray..."
+read -p "Deploy Kubernetes cluster now? (yes/no): " DEPLOY
+if [ "$DEPLOY" == "yes" ]; then
+    ansible-playbook -i inventory/mycluster/hosts.yaml cluster.yml -b
+    
+    if [ $? -eq 0 ]; then
+        echo ""
+        echo "🔧 Step 6: Setting up kubeconfig on control plane..."
+        cd ..
+        ansible-playbook -i kubespray/inventory/mycluster/hosts.yaml setup-kubeconfig.yml
+        
+        if [ $? -eq 0 ]; then
+            echo ""
+            echo "=========================================="
+            echo "✅ Kubernetes Cluster Deployed Successfully!"
+            echo "=========================================="
+            echo ""
+            echo "To access your cluster:"
+            echo "  1. SSH into the control plane node"
+            echo "  2. Run: kubectl get nodes"
+            echo ""
+        else
+            echo ""
+            echo "⚠️  Cluster deployed but kubeconfig setup failed."
+            echo "You can set it up manually on the control plane:"
+            echo "  mkdir -p ~/.kube"
+            echo "  sudo cp /etc/kubernetes/admin.conf ~/.kube/config"
+            echo "  sudo chown \$(id -u):\$(id -g) ~/.kube/config"
+        fi
+    else
+        echo ""
+        echo "❌ Kubernetes deployment failed. Check the logs above."
+        exit 1
+    fi
+else
+    echo "Skipping Kubernetes deployment."
+    echo "To deploy manually, run:"
+    echo "  cd kubespray"
+    echo "  ansible-playbook -i inventory/mycluster/hosts.yaml cluster.yml -b"
+fi
