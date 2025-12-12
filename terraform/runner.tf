@@ -7,8 +7,9 @@ resource "aws_instance" "github_runner" {
   associate_public_ip_address = true
 
   user_data = templatefile("${path.module}/runner_user_data.sh.tpl", {
-    github_repo  = var.github_repo
-    runner_token = var.runner_token
+    github_repo       = var.github_repo
+    runner_token      = var.runner_token
+    GH_RUNNER_VERSION = var.gh_runner_version
   })
 
   depends_on = [
