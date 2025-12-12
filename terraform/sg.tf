@@ -3,13 +3,13 @@ resource "aws_security_group" "ec2_sg" {
   vpc_id      = aws_vpc.main.id
   description = "Security group for Kubernetes cluster nodes and microservices"
 
-  # SSH (22 TCP) - Required for Ansible/administration
+  # SSH for Github Runner
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "SSH access for administration"
+    description     = "SSH from GitHub runner"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [aws_security_group.runner_sg.id]
   }
 
   # Kubernetes API (6443 TCP)
@@ -161,4 +161,17 @@ resource "aws_security_group" "elb_sg" {
     Project = var.project_tag
   }
 
+}
+
+resource "aws_security_group" "runner_sg" {
+  name        = "github-runner-sg"
+  description = "SG for GitHub self-hosted runner"
+  vpc_id      = aws_vpc.main.id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }

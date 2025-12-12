@@ -23,7 +23,7 @@ jobs:
     - name: Configure AWS Credentials via OIDC
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: arn:aws:iam::024955634588:role/salon-GitHubActionsInfraRole
+        role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
         aws-region: ap-south-1
 
     - name: Setup Terraform
@@ -66,4 +66,39 @@ jobs:
     - name: Export Terraform output
       if: github.event_name == 'workflow_dispatch'
       working-directory: terraform
-      run: terraform output -json > tf_outputs.json
+      run: terraform output -json > tf.json
+
+    - name: Upload outputs
+      if: github.event_name == 'workflow_dispatch'
+      uses: actions/upload-artifact@v4
+      with:
+        name: tf
+        path: tf.json
+
+  kubespray:
+    if: github.event_name == 'workflow_dispatch'
+    needs: infra
+    runs-on: [self-hosted, kubespray-runner]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Terraform outputs
+        uses: actions/download-artifact@v4
+        with:
+          name: tf
+
+      - name: Install requirements
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip ansible sshpass
+          pip3 install -r kubespray/requirements.txt
+
+      - name: Generate Kubespray inventory
+        run: |
+          python3 scripts/generate_inventory.py tf.json
+
+      - name: Run Kubespray
+        run: |
+          ansible-playbook -i inventory/mycluster/hosts.yaml \
+            --become --become-user=root \
+            cluster.yml
