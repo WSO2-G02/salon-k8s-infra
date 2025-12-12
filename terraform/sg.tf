@@ -5,7 +5,7 @@ resource "aws_security_group" "ec2_sg" {
 
   # SSH for Github Runner
   ingress {
-    description     = "SSH from GitHub runner"
+    description     = "SSH from GitHub Runner"
     from_port       = 22
     to_port         = 22
     protocol        = "tcp"
