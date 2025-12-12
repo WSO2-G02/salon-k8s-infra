@@ -82,6 +82,7 @@ variable "ssm_instance_profile_name" {
 
 variable "github_repo" {
   description = "GitHub repo in owner/repo format"
+  default     = "WSO2-G02/salon-k8s-infra"
 }
 
 variable "runner_token" {
