@@ -3,7 +3,7 @@ resource "aws_instance" "github_runner" {
   instance_type               = "t3.medium"
   subnet_id                   = values(aws_subnet.public)[0].id
   security_groups             = [aws_security_group.runner_sg.id]
-  key_name                    = var.ssh_key_name
+  key_name                    = aws_key_pair.salon_key.key_name
   associate_public_ip_address = true
 
   user_data = templatefile("${path.module}/runner_user_data.sh.tpl", {
@@ -13,7 +13,8 @@ resource "aws_instance" "github_runner" {
 
   depends_on = [
     aws_subnet.public,
-    aws_subnet.private
+    aws_subnet.private,
+    aws_key_pair.salon_key
   ]
 
   tags = {

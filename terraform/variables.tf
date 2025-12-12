@@ -89,7 +89,3 @@ variable "runner_token" {
   description = "GitHub Actions registration token"
   sensitive   = true
 }
-
-variable "ssh_key_name" {
-  default = aws_key_pair.salon_key.key_name
-}
