@@ -90,5 +90,3 @@ variable "runner_token" {
   sensitive   = true
 }
 
-variable "subnet_id" {}
-variable "ssh_key_name" {}
