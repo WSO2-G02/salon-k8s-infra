@@ -12,7 +12,6 @@ resource "aws_security_group" "ec2_sg" {
     security_groups = [aws_security_group.runner_sg.id]
   }
 
-
   # Kubernetes API (6443 TCP)
 
   ingress {
