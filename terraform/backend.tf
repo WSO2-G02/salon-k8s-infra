@@ -1,3 +1,5 @@
+# S3 Bucket for state file
+
 terraform {
   backend "s3" {
     bucket       = "salon-terraform-state10249343"
