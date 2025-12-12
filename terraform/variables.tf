@@ -79,3 +79,15 @@ variable "ssm_instance_profile_name" {
   description = "The name of the instance profile used to access EC2 instances"
   default     = "salon-app-ssm-ec2-role"
 }
+
+variable "github_repo" {
+  description = "GitHub repo in owner/repo format"
+}
+
+variable "runner_token" {
+  description = "GitHub Actions registration token"
+  sensitive   = true
+}
+
+variable "subnet_id" {}
+variable "ssh_key_name" {}
