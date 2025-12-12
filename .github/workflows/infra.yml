@@ -39,7 +39,7 @@ jobs:
 
 #    - name: Terraform Force Unlock
 #      working-directory: terraform
-#      run: terraform force-unlock -force 46e21f4b-f257-d3c1-51e1-91e2e0882f16
+#      run: terraform force-unlock -force cf922e9d-4bc6-8df4-cd34-4894d04ec3b8
 
     - name: Terraform Format
       working-directory: terraform
@@ -55,9 +55,11 @@ jobs:
         TF_VAR_runner_token: ${{ secrets.RUNNER_TOKEN }}
       run: terraform plan -out=tfplan # Saves the plan to a file
     
-#    - name: Terraform Destroy
-#      working-directory: terraform
-#      run: terraform destroy -auto-approve # Destroys created resources
+    - name: Terraform Destroy
+      working-directory: terraform
+      env:
+        TF_VAR_runner_token: ${{ secrets.RUNNER_TOKEN }}
+      run: terraform destroy -auto-approve # Destroys created resources
 
 #     OPTIONAL — only run manually!
     - name: Terraform Apply

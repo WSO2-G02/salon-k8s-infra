@@ -10,7 +10,6 @@ locals {
     # Install GitHub Runner
     mkdir -p /actions-runner
     cd /actions-runner
-    GH_RUNNER_VERSION="2.317.0"
     curl -o runner.tar.gz -L https://github.com/actions/runner/releases/download/v${GH_RUNNER_VERSION}/actions-runner-linux-x64-${GH_RUNNER_VERSION}.tar.gz
     tar xzf runner.tar.gz
 

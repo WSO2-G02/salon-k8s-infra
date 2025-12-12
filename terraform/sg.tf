@@ -163,8 +163,10 @@ resource "aws_security_group" "elb_sg" {
 
 }
 
+# Runner Security group
+
 resource "aws_security_group" "runner_sg" {
-  name        = "github-runner-sg"
+  name        = "${var.project_name}-runner-sg"
   description = "SG for GitHub self-hosted runner"
   vpc_id      = aws_vpc.main.id
 
@@ -174,4 +176,15 @@ resource "aws_security_group" "runner_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  depends_on = [
+    aws_vpc.main
+  ]
+
+  tags = {
+    Name    = "${var.project_name}-runner-sg"
+    Project = var.project_tag
+  }
+
 }
+

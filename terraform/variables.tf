@@ -90,3 +90,7 @@ variable "runner_token" {
   sensitive   = true
 }
 
+variable "gh_runner_version" {
+  description = "GitHub Actions Runner Version"
+  default     = "2.317.0"
+}

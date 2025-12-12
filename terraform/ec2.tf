@@ -5,7 +5,7 @@ resource "aws_launch_template" "app_lt" {
   key_name      = aws_key_pair.salon_key.key_name
 
   iam_instance_profile {
-    name = var.ssm_instance_profile_name
+    name = aws_iam_instance_profile.ssm_ec2_instance_profile.name
   }
 
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
