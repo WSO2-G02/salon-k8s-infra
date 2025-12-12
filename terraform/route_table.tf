@@ -15,3 +15,5 @@ resource "aws_route_table" "public" {
     Name = "${var.project_name}-public-rt"
   }
 }
+
+#comment
