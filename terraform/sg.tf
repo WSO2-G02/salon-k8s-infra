@@ -163,6 +163,8 @@ resource "aws_security_group" "elb_sg" {
 
 }
 
+# Runner Security group
+
 resource "aws_security_group" "runner_sg" {
   name        = "${var.project_name}-runner-sg"
   description = "SG for GitHub self-hosted runner"
