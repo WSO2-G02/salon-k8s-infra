@@ -37,9 +37,9 @@ jobs:
       working-directory: terraform
       run: terraform init
 
-#    - name: Terraform Force Unlock
-#      working-directory: terraform
-#      run: terraform force-unlock -force c91518ea-768c-caec-2f18-f0fe02eebe47
+    - name: Terraform Force Unlock
+      working-directory: terraform
+      run: terraform force-unlock -force b3b32e56-420a-37c1-c725-1d2c078d8d7e
 
     - name: Terraform Format
       working-directory: terraform
