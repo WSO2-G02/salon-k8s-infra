@@ -21,3 +21,20 @@ resource "aws_ecr_repository" "repos" {
     Service = each.key
   }
 }
+
+# Automatically update GitOps deployment files with ECR URLs
+# This runs AFTER ECR repos are created and outputs are available
+resource "null_resource" "update_ecr_urls" {
+  depends_on = [aws_ecr_repository.repos]
+
+  # Trigger on any ECR repository change
+  triggers = {
+    ecr_repos = jsonencode([for r in aws_ecr_repository.repos : r.repository_url])
+  }
+
+  provisioner "local-exec" {
+    command     = "bash update_ecr_urls.sh || true"
+    working_dir = path.module
+    when        = create
+  }
+}

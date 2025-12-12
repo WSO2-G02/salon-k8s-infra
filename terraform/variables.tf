@@ -1,6 +1,6 @@
 variable "region" {
   type    = string
-  default = "ap-south-1" # replace as necessary
+  default = "us-east-1" # replace as necessary
 }
 
 variable "project_name" {
@@ -47,13 +47,20 @@ variable "services" {
 
 variable "instance_type" {
   type    = string
+  description = "Instance type for worker nodes"
   default = "t3.large"
+}
+
+variable "control_plane_instance_type" {
+  type    = string
+  description = "Instance type for the control plane node"
+  default     = "t3.2xlarge"
 }
 
 variable "ami_id" {
   type        = string
-  description = "AMI ID for EC2 instances"
-  default     = "ami-0ade68f094cc81635"
+  description = "AMI ID for EC2 instances (now unused, using data source)"
+  default     = ""
 }
 
 # Autoscaling variables
@@ -70,6 +77,7 @@ variable "max_size" {
 
 variable "desired_capacity" {
   type    = number
+  description = "Total number of nodes (1 CP + N workers). So for 4 total, we launch 1 CP and 3 workers."
   default = 4
 }
 

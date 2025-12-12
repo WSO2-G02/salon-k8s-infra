@@ -35,6 +35,11 @@ systemctl start docker
 usermod -aG docker ubuntu 2>/dev/null || true
 usermod -aG docker ec2-user 2>/dev/null || true
 
+# Configure passwordless sudo for Ansible
+echo "ubuntu ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers 2>/dev/null || true
+echo "ec2-user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers 2>/dev/null || true
+echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers 2>/dev/null || true
+
 
 # -------------------------------
 # 2. Ensure SSM Agent is installed & running

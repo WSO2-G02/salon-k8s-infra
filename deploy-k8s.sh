@@ -11,7 +11,11 @@ echo ""
 echo "📦 Step 1: Deploying AWS Infrastructure with Terraform..."
 cd terraform
 
-if [ ! -f "terraform.tfstate" ]; then
+# Cleanup old plan if exists
+rm -f tfplan
+rm -f ../kubespray/inventory/mycluster/hosts.yaml
+
+if [ ! -f ".terraform/terraform.tfstate" ] && [ ! -f "terraform.tfstate" ]; then
     echo "Initializing Terraform..."
     terraform init
 fi
@@ -63,6 +67,7 @@ echo ""
 echo "🚀 Step 5: Deploying Kubernetes cluster with Kubespray..."
 read -p "Deploy Kubernetes cluster now? (yes/no): " DEPLOY
 if [ "$DEPLOY" == "yes" ]; then
+    export ANSIBLE_HOST_KEY_CHECKING=False
     ansible-playbook -i inventory/mycluster/hosts.yaml cluster.yml -b
     
     if [ $? -eq 0 ]; then
