@@ -14,7 +14,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 KUBESPRAY_DIR="../kubespray"
-INVENTORY_FILE="$KUBESPRAY_DIR/inventory/mycluster/hosts.yaml"
+INVENTORY_FILE="../inventory/hosts.yaml"
 
 echo -e "${YELLOW}Step 1: Checking if inventory exists...${NC}"
 if [ ! -f "$INVENTORY_FILE" ]; then
@@ -45,6 +45,9 @@ echo -e "${YELLOW}Step 3: Running Kubespray deployment...${NC}"
 echo -e "${RED}WARNING: This will take 15-20 minutes!${NC}"
 echo ""
 
+# Set Ansible Config to our custom one in root
+export ANSIBLE_CONFIG=$(cd .. && pwd)/ansible.cfg
+
 cd "$KUBESPRAY_DIR"
 
 # Export ANSIBLE_ROLES_PATH to ensure roles are found
@@ -52,7 +55,7 @@ export ANSIBLE_ROLES_PATH="$PWD/roles:$ANSIBLE_ROLES_PATH"
 
 # Run Kubespray
 export ANSIBLE_HOST_KEY_CHECKING=False
-ansible-playbook -i inventory/mycluster/hosts.yaml cluster.yml -b
+ansible-playbook -i ../inventory/hosts.yaml cluster.yml -b
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}Kubespray deployment successful!${NC}"

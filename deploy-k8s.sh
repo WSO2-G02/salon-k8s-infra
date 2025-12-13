@@ -40,19 +40,22 @@ sleep 30
 # Step 3: Generate inventory (already triggered by Terraform null_resource)
 echo ""
 echo "📝 Step 3: Verifying inventory generation..."
-if [ -f "../kubespray/inventory/mycluster/hosts.yaml" ]; then
+# Inventory is now at ../inventory/hosts.yaml relative to terraform dir, or ./inventory/hosts.yaml relative to root
+if [ -f "inventory/hosts.yaml" ]; then
     echo "✓ Inventory file found"
-    cat ../kubespray/inventory/mycluster/hosts.yaml
+    cat inventory/hosts.yaml
 else
-    echo "✗ Inventory not found. Running generation manually..."
-    bash generate_inventory.sh
+    echo "✗ Inventory not found (looked at inventory/hosts.yaml)." 
 fi
 
 # Step 4: Test connectivity
 echo ""
 echo "🔌 Step 4: Testing SSH connectivity to nodes..."
-cd ../kubespray
-ansible all -i inventory/mycluster/hosts.yaml -m ping
+# We run ansible from root context or setup ANSIBLE_CONFIG
+export ANSIBLE_CONFIG=$(pwd)/ansible.cfg
+# cd to kubespray to run ansible, but ref inventory in ../inventory/
+cd kubespray
+ansible all -i ../inventory/hosts.yaml -m ping
 
 if [ $? -ne 0 ]; then
     echo "⚠️  Warning: Some nodes are not reachable. Check SSH keys and security groups."
@@ -68,13 +71,15 @@ echo "🚀 Step 5: Deploying Kubernetes cluster with Kubespray..."
 read -p "Deploy Kubernetes cluster now? (yes/no): " DEPLOY
 if [ "$DEPLOY" == "yes" ]; then
     export ANSIBLE_HOST_KEY_CHECKING=False
-    ansible-playbook -i inventory/mycluster/hosts.yaml cluster.yml -b
+    # ANSIBLE_CONFIG is already exported
+    ansible-playbook -i ../inventory/hosts.yaml cluster.yml -b
     
     if [ $? -eq 0 ]; then
         echo ""
         echo "🔧 Step 6: Setting up kubeconfig on control plane..."
         cd ..
-        ansible-playbook -i kubespray/inventory/mycluster/hosts.yaml setup-kubeconfig.yml
+        # Now back in root
+        ansible-playbook -i inventory/hosts.yaml setup-kubeconfig.yml
         
         if [ $? -eq 0 ]; then
             echo ""
@@ -102,6 +107,7 @@ if [ "$DEPLOY" == "yes" ]; then
 else
     echo "Skipping Kubernetes deployment."
     echo "To deploy manually, run:"
+    echo "  export ANSIBLE_CONFIG=$(pwd)/ansible.cfg"
     echo "  cd kubespray"
-    echo "  ansible-playbook -i inventory/mycluster/hosts.yaml cluster.yml -b"
+    echo "  ansible-playbook -i ../inventory/hosts.yaml cluster.yml -b"
 fi

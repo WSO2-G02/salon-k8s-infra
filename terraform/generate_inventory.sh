@@ -36,10 +36,10 @@ echo ""
 echo "📝 Generating Kubespray inventory..."
 
 # Ensure inventory directory exists
-mkdir -p ../kubespray/inventory/mycluster/group_vars
+mkdir -p ../inventory
 
 # Generate Kubespray inventory in YAML format
-cat > ../kubespray/inventory/mycluster/hosts.yaml <<EOF
+cat > ../inventory/hosts.yaml <<EOF
 all:
   hosts:
     control-plane:
@@ -52,7 +52,7 @@ EOF
 for i in "${!PUBLIC_IPS_ARRAY[@]}"; do
   if [ $i -gt 0 ]; then
     WORKER_NUM=$i
-    cat >> ../kubespray/inventory/mycluster/hosts.yaml <<EOF
+    cat >> ../inventory/hosts.yaml <<EOF
     worker${WORKER_NUM}:
       ansible_host: ${PUBLIC_IPS_ARRAY[$i]}
       ip: ${PRIVATE_IPS_ARRAY[$i]}
@@ -62,7 +62,7 @@ EOF
 done
 
 # Add group definitions
-cat >> ../kubespray/inventory/mycluster/hosts.yaml <<EOF
+cat >> ../inventory/hosts.yaml <<EOF
   children:
     kube_control_plane:
       hosts:
@@ -76,12 +76,12 @@ EOF
 for i in "${!PUBLIC_IPS_ARRAY[@]}"; do
   if [ $i -gt 0 ]; then
     WORKER_NUM=$i
-    echo "        worker${WORKER_NUM}:" >> ../kubespray/inventory/mycluster/hosts.yaml
+    echo "        worker${WORKER_NUM}:" >> ../inventory/hosts.yaml
   fi
 done
 
 # Add etcd and other groups
-cat >> ../kubespray/inventory/mycluster/hosts.yaml <<EOF
+cat >> ../inventory/hosts.yaml <<EOF
     etcd:
       hosts:
         control-plane:
@@ -98,7 +98,7 @@ cat >> ../kubespray/inventory/mycluster/hosts.yaml <<EOF
     ansible_python_interpreter: /usr/bin/python3
 EOF
 
-echo "✓ Kubespray inventory generated at ../kubespray/inventory/mycluster/hosts.yaml"
+echo "✓ Kubespray inventory generated at ../inventory/hosts.yaml"
 echo ""
 echo "Instance Summary:"
 echo "  Control Plane: ${PUBLIC_IPS_ARRAY[0]} (${PRIVATE_IPS_ARRAY[0]})"
@@ -114,5 +114,6 @@ echo ""
 echo "Next steps:"
 echo "  1. Verify SSH key: ~/.ssh/salon-key.pem"
 echo "  2. cd ../kubespray"
-echo "  3. ansible-playbook -i inventory/mycluster/hosts.yaml cluster.yml -b"
+echo "  3. export ANSIBLE_CONFIG=$(cd .. && pwd)/ansible.cfg"
+echo "  4. ansible-playbook -i ../inventory/hosts.yaml cluster.yml -b"
 echo ""
