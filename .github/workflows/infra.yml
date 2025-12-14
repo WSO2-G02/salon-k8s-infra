@@ -39,7 +39,7 @@ jobs:
 
 #    - name: Terraform Force Unlock
 #      working-directory: terraform
-#      run: terraform force-unlock -force cf922e9d-4bc6-8df4-cd34-4894d04ec3b8
+#      run: terraform force-unlock -force 916dbd11-f9bd-bc04-b6e1-62834d384707
 
     - name: Terraform Format
       working-directory: terraform
@@ -65,11 +65,15 @@ jobs:
     - name: Terraform Apply
       if: github.event_name == 'workflow_dispatch'
       working-directory: terraform
-      run: terraform apply -auto-approve tfplan
+      env:
+        TF_VAR_runner_token: ${{ secrets.RUNNER_TOKEN }}
+      run: terraform apply -auto-approve
 
     - name: Export Terraform output
       if: github.event_name == 'workflow_dispatch'
       working-directory: terraform
+      env:
+        TF_VAR_runner_token: ${{ secrets.RUNNER_TOKEN }}
       run: terraform output -json > tf.json
 
     - name: Upload outputs
@@ -77,7 +81,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: tf
-        path: tf.json
+        path: terraform/tf.json
 
   kubespray:
     if: github.event_name == 'workflow_dispatch'

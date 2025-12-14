@@ -55,6 +55,18 @@ resource "aws_autoscaling_group" "app_asg" {
     propagate_at_launch = true
   }
 
+  tag {
+    key                 = "k8s.io/cluster-autoscaler/enabled"
+    value               = "true"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "k8s.io/cluster-autoscaler/${var.project_name}"
+    value               = "owned"
+    propagate_at_launch = true
+  }
+
   health_check_type         = "EC2"
   health_check_grace_period = 300
 }
@@ -71,14 +83,15 @@ data "aws_instances" "asg_instances" {
 }
 
 resource "null_resource" "generate_inventory" {
-  depends_on = [aws_autoscaling_group.app_asg, data.aws_instances.asg_instances]
+  depends_on = [aws_autoscaling_group.app_asg]
 
   provisioner "local-exec" {
-    command     = "bash generate_inventory.sh"
-    working_dir = path.module
+    command     = "bash generate_inventory.sh ${var.desired_capacity}"
+    interpreter = ["/bin/bash", "-c"]
   }
 
   triggers = {
-    instance_ids = join(",", data.aws_instances.asg_instances.ids)
+    asg_name = aws_autoscaling_group.app_asg.name
   }
 }
+

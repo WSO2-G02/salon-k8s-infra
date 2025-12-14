@@ -2,7 +2,7 @@
 # EC2 Role for K8s Nodes / Runner
 
 resource "aws_iam_role" "ssm_ec2_role" {
-  name = var.ssm_instance_profile_name
+  name = "salon-app-ssm-ec2-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -18,7 +18,7 @@ resource "aws_iam_role" "ssm_ec2_role" {
   })
 }
 
-# Managed Policy: AmazonSSMManagedInstanceCore
+# Managed Policy - AmazonSSMManagedInstanceCore
 
 resource "aws_iam_role_policy_attachment" "ssm_ec2_managed" {
   role       = aws_iam_role.ssm_ec2_role.name
@@ -56,6 +56,39 @@ resource "aws_iam_policy" "ecr_pull_policy" {
 resource "aws_iam_role_policy_attachment" "ecr_pull_attachment" {
   role       = aws_iam_role.ssm_ec2_role.name
   policy_arn = aws_iam_policy.ecr_pull_policy.arn
+}
+
+# Custom Policy: Cluster Autoscaler
+
+resource "aws_iam_policy" "cluster_autoscaler_policy" {
+  name        = "salon-app-cluster-autoscaler-policy"
+  description = "Allow EC2 nodes to scale the ASG"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "autoscaling:DescribeAutoScalingGroups",
+          "autoscaling:DescribeAutoScalingInstances",
+          "autoscaling:DescribeLaunchConfigurations",
+          "autoscaling:DescribeTags",
+          "autoscaling:SetDesiredCapacity",
+          "autoscaling:TerminateInstanceInAutoScalingGroup",
+          "ec2:DescribeLaunchTemplateVersions"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# Attach Cluster Autoscaler Policy to Role
+
+resource "aws_iam_role_policy_attachment" "cluster_autoscaler_attachment" {
+  role       = aws_iam_role.ssm_ec2_role.name
+  policy_arn = aws_iam_policy.cluster_autoscaler_policy.arn
 }
 
 
