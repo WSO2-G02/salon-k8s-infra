@@ -79,10 +79,9 @@ jobs:
     - name: Upload outputs
       if: github.event_name == 'workflow_dispatch'
       uses: actions/upload-artifact@v4
-      working-directory: terraform
       with:
         name: tf
-        path: tf.json
+        path: terraform/tf.json
 
   kubespray:
     if: github.event_name == 'workflow_dispatch'
