@@ -18,7 +18,7 @@ resource "aws_iam_role" "ssm_ec2_role" {
   })
 }
 
-# Managed Policy: AmazonSSMManagedInstanceCore
+# Managed Policy - AmazonSSMManagedInstanceCore
 
 resource "aws_iam_role_policy_attachment" "ssm_ec2_managed" {
   role       = aws_iam_role.ssm_ec2_role.name
