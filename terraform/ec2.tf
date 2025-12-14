@@ -1,4 +1,4 @@
-﻿resource "aws_launch_template" "app_lt" {
+resource "aws_launch_template" "app_lt" {
   name_prefix   = "${var.project_name}-lt"
   image_id      = var.ami_id
   instance_type = var.instance_type
