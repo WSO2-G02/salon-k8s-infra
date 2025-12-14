@@ -33,11 +33,11 @@ resource "aws_ecr_lifecycle_policy" "cleanup_policy" {
         rulePriority = 1
         description  = "Expire temporary scan images after 1 day"
         selection = {
-          tagStatus   = "tagged"
+          tagStatus     = "tagged"
           tagPrefixList = ["scan"]
-          countType   = "sinceImagePushed"
-          countUnit   = "days"
-          countNumber = 1
+          countType     = "sinceImagePushed"
+          countUnit     = "days"
+          countNumber   = 1
         }
         action = {
           type = "expire"
