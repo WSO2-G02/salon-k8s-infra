@@ -71,14 +71,27 @@ data "aws_instances" "asg_instances" {
 }
 
 resource "null_resource" "generate_inventory" {
-  depends_on = [aws_autoscaling_group.app_asg, data.aws_instances.asg_instances]
+  depends_on = [aws_autoscaling_group.app_asg]
 
   provisioner "local-exec" {
-    command     = "bash generate_inventory.sh"
-    working_dir = path.module
+    command     = <<EOT
+COUNT=0
+while [ $COUNT -lt ${var.desired_capacity} ]; do
+  echo "Waiting for ASG instances to be ready..."
+  sleep 10
+  COUNT=$(aws ec2 describe-instances \
+    --filters "Name=tag:aws:autoscaling:groupName,Values=${aws_autoscaling_group.app_asg.name}" \
+              "Name=instance-state-name,Values=running" \
+    --query "Reservations[*].Instances[*].InstanceId" \
+    --output json | jq length)
+done
+
+bash generate_inventory.sh
+EOT
+    interpreter = ["/bin/bash", "-c"]
   }
 
   triggers = {
-    instance_ids = join(",", data.aws_instances.asg_instances.ids)
+    asg_name = aws_autoscaling_group.app_asg.name
   }
 }

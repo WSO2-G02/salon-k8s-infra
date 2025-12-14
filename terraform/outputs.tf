@@ -1,11 +1,11 @@
 output "instance_public_ips" {
-  description = "Public IPs of all instances in ASG"
-  value       = data.aws_instances.asg_instances.public_ips
+  description = "Public IPs of instances in the ASG"
+  value       = [for i in data.aws_instances.asg_instances.instances : i.public_ip]
 }
 
 output "instance_private_ips" {
-  description = "Private IPs of all instances in ASG"
-  value       = data.aws_instances.asg_instances.private_ips
+  description = "Private IPs of instances in the ASG"
+  value       = [for i in data.aws_instances.asg_instances.instances : i.private_ip]
 }
 
 output "instance_ids" {
