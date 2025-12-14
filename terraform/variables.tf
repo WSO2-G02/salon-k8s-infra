@@ -73,13 +73,6 @@ variable "desired_capacity" {
   default = 4
 }
 
-# Reference an existing instance profile
-variable "ssm_instance_profile_name" {
-  type        = string
-  description = "The name of the instance profile used to access EC2 instances"
-  default     = "salon-app-ssm-ec2-role"
-}
-
 variable "github_repo" {
   description = "GitHub repo in owner/repo format"
   default     = "WSO2-G02/salon-k8s-infra"

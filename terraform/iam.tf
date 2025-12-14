@@ -2,7 +2,7 @@
 # EC2 Role for K8s Nodes / Runner
 
 resource "aws_iam_role" "ssm_ec2_role" {
-  name = var.ssm_instance_profile_name
+  name = "salon-app-ssm-ec2-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
