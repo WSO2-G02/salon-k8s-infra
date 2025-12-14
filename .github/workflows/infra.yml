@@ -65,7 +65,7 @@ jobs:
     - name: Terraform Apply
       if: github.event_name == 'workflow_dispatch'
       working-directory: terraform
-      run: terraform apply -auto-approve tfplan
+      run: terraform apply -auto-approve
 
     - name: Export Terraform output
       if: github.event_name == 'workflow_dispatch'
