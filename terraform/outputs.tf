@@ -1,16 +1,16 @@
 output "instance_public_ips" {
   description = "Public IPs of instances in the ASG"
-  value       = [for i in data.aws_instances.asg_instances.instances : i.public_ip]
+  value       = data.aws_instances.k8s_nodes.public_ips
 }
 
 output "instance_private_ips" {
   description = "Private IPs of instances in the ASG"
-  value       = [for i in data.aws_instances.asg_instances.instances : i.private_ip]
+  value       = data.aws_instances.k8s_nodes.private_ips
 }
 
 output "instance_ids" {
   description = "Instance IDs of all instances in ASG"
-  value       = data.aws_instances.asg_instances.ids
+  value       = data.aws_instances.k8s_nodes.ids
 }
 
 output "kubespray_inventory_path" {
