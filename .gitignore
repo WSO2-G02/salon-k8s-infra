@@ -60,3 +60,6 @@ terraform/*.zip
 # Temporary files
 *.tmp
 *.bak
+
+# Documentation
+mydocs/
