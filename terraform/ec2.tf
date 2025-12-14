@@ -55,6 +55,18 @@ resource "aws_autoscaling_group" "app_asg" {
     propagate_at_launch = true
   }
 
+  tag {
+    key                 = "k8s.io/cluster-autoscaler/enabled"
+    value               = "true"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "k8s.io/cluster-autoscaler/${var.project_name}"
+    value               = "owned"
+    propagate_at_launch = true
+  }
+
   health_check_type         = "EC2"
   health_check_grace_period = 300
 }
