@@ -1,4 +1,4 @@
-resource "aws_launch_template" "app_lt" {
+﻿resource "aws_launch_template" "app_lt" {
   name_prefix   = "${var.project_name}-lt"
   image_id      = var.ami_id
   instance_type = var.instance_type
@@ -86,20 +86,7 @@ resource "null_resource" "generate_inventory" {
   depends_on = [aws_autoscaling_group.app_asg]
 
   provisioner "local-exec" {
-    command     = <<EOT
-COUNT=0
-while [ $COUNT -lt ${var.desired_capacity} ]; do
-  echo "Waiting for ASG instances to be ready..."
-  sleep 10
-  COUNT=$(aws ec2 describe-instances \
-    --filters "Name=tag:aws:autoscaling:groupName,Values=${aws_autoscaling_group.app_asg.name}" \
-              "Name=instance-state-name,Values=running" \
-    --query "Reservations[*].Instances[*].InstanceId" \
-    --output json | jq length)
-done
-
-bash generate_inventory.sh
-EOT
+    command     = "bash generate_inventory.sh ${var.desired_capacity}"
     interpreter = ["/bin/bash", "-c"]
   }
 
@@ -107,3 +94,4 @@ EOT
     asg_name = aws_autoscaling_group.app_asg.name
   }
 }
+
