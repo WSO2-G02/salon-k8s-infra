@@ -10,7 +10,7 @@ DESIRED_CAPACITY=${1:-4}  # default to 4 if not passed
 # Wait for ASG instances to be ready
 # -----------------------------
 COUNT=0
-ASG_NAME="terraform-20251214034618695100000004"  # replace with your ASG name or pass as $2
+ASG_NAME=$(terraform output -raw asg_name)  
 echo "⏳ Waiting for ASG instances to be running..."
 while [ $COUNT -lt $DESIRED_CAPACITY ]; do
   sleep 10
