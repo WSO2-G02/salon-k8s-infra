@@ -1,21 +1,21 @@
 all:
   hosts:
     control-plane:
-      ansible_host: 13.221.238.217
-      ip: 10.0.1.12
-      access_ip: 10.0.1.12
+      ansible_host: 174.129.176.56
+      ip: 10.0.1.205
+      access_ip: 10.0.1.205
     worker1:
-      ansible_host: 18.208.223.84
-      ip: 10.0.2.140
-      access_ip: 10.0.2.140
+      ansible_host: 54.87.19.71
+      ip: 10.0.2.150
+      access_ip: 10.0.2.150
     worker2:
-      ansible_host: 3.91.23.99
-      ip: 10.0.2.134
-      access_ip: 10.0.2.134
+      ansible_host: 34.238.122.108
+      ip: 10.0.1.62
+      access_ip: 10.0.1.62
     worker3:
-      ansible_host: 54.147.202.168
-      ip: 10.0.1.109
-      access_ip: 10.0.1.109
+      ansible_host: 18.205.152.141
+      ip: 10.0.1.195
+      access_ip: 10.0.1.195
   children:
     kube_control_plane:
       hosts:

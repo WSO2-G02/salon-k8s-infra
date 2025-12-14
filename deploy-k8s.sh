@@ -104,6 +104,30 @@ if [ "$DEPLOY" == "yes" ]; then
         echo "❌ Kubernetes deployment failed. Check the logs above."
         exit 1
     fi
+    
+    # Step 7: Local Kubeconfig Setup
+    echo ""
+    echo "💻 Step 7: Configuring local kubectl..."
+    CONTROL_IP=$(cd terraform && terraform output -json instance_public_ips | jq -r '.[0]')
+    mkdir -p ~/.kube
+    
+    # Backup existing config
+    if [ -f ~/.kube/config ]; then
+        mv ~/.kube/config ~/.kube/config.bak.$(date +%s)
+    fi
+
+    scp -i terraform/salon-key.pem -o StrictHostKeyChecking=no ubuntu@${CONTROL_IP}:~/.kube/config ~/.kube/config
+    
+    if [ $? -eq 0 ]; then
+        # Update server IP to public IP
+        sed -i "s/127.0.0.1/${CONTROL_IP}/g" ~/.kube/config
+        
+        echo "✓ Local kubeconfig updated successfully!"
+        echo "You can now run 'kubectl get nodes' from this terminal."
+    else
+        echo "⚠️  Failed to download kubeconfig. You may need to do it manually."
+    fi
+
 else
     echo "Skipping Kubernetes deployment."
     echo "To deploy manually, run:"
@@ -111,3 +135,4 @@ else
     echo "  cd kubespray"
     echo "  ansible-playbook -i ../inventory/hosts.yaml cluster.yml -b"
 fi
+

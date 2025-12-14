@@ -60,3 +60,5 @@ terraform/*.zip
 # Temporary files
 *.tmp
 *.bak
+release-v3.29.5.tgz
+release-v3.29.5/

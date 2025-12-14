@@ -44,6 +44,15 @@ resource "aws_launch_template" "cp_lt" {
       Name    = "${var.project_name}-control-plane"
     }
   }
+
+  block_device_mappings {
+    device_name = "/dev/sda1"
+
+    ebs {
+      volume_size = var.control_plane_volume_size
+      volume_type = "gp3"
+    }
+  }
 }
 
 resource "aws_autoscaling_group" "cp_asg" {
@@ -99,6 +108,15 @@ resource "aws_launch_template" "worker_lt" {
       Project = var.project_tag
       Role    = "k8s-worker"
       Name    = "${var.project_name}-worker"
+    }
+  }
+
+  block_device_mappings {
+    device_name = "/dev/sda1"
+
+    ebs {
+      volume_size = var.worker_volume_size
+      volume_type = "gp3"
     }
   }
 }
