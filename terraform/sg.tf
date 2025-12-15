@@ -94,12 +94,31 @@ resource "aws_security_group" "ec2_sg" {
 
   # HTTP Traffic from LoadBalancers
 
+  # HTTP Traffic (Public)
   ingress {
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    security_groups = [aws_security_group.elb_sg.id]
-    description     = "HTTP traffic from LoadBalancer"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "HTTP traffic (Public)"
+  }
+
+  # HTTPS Traffic (Public)
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "HTTPS traffic (Public)"
+  }
+
+  # OpenSearch / Fluent Bit (9200 TCP)
+  ingress {
+    from_port   = 9200
+    to_port     = 9200
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
+    description = "OpenSearch traffic from Kubernetes nodes (Fluent Bit)"
   }
 
   # Allow all Outbound 

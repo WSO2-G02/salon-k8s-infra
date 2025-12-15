@@ -87,15 +87,3 @@ variable "ssm_instance_profile_name" {
   description = "The name of the instance profile used to access EC2 instances"
   default     = "salon-app-ssm-ec2-role"
 }
-
-variable "worker_volume_size" {
-  type        = number
-  description = "Size of the root volume for worker nodes in GB"
-  default     = 50
-}
-
-variable "control_plane_volume_size" {
-  type        = number
-  description = "Size of the root volume for control plane nodes in GB"
-  default     = 50
-}
