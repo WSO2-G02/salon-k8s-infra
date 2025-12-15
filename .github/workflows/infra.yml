@@ -53,15 +53,17 @@ jobs:
       working-directory: terraform
       env:
         TF_VAR_runner_token: ${{ secrets.RUNNER_TOKEN }}
-      run: terraform plan -out=tfplan # Saves the plan to a file
+      run: terraform plan -out=tfplan
     
-    - name: Terraform Destroy
-      working-directory: terraform
-      env:
-        TF_VAR_runner_token: ${{ secrets.RUNNER_TOKEN }}
-      run: terraform destroy -auto-approve # Destroys created resources
+    # WARNING: terraform destroy is COMMENTED OUT for safety
+    # Uncomment only for intentional teardown
+    # - name: Terraform Destroy
+    #   working-directory: terraform
+    #   env:
+    #     TF_VAR_runner_token: ${{ secrets.RUNNER_TOKEN }}
+    #   run: terraform destroy -auto-approve
 
-#     OPTIONAL — only run manually!
+    # Apply only on manual workflow dispatch
     - name: Terraform Apply
       if: github.event_name == 'workflow_dispatch'
       working-directory: terraform
