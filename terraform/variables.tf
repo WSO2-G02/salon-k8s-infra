@@ -87,3 +87,25 @@ variable "gh_runner_version" {
   description = "GitHub Actions Runner Version"
   default     = "2.317.0"
 }
+
+# =============================================================================
+# External Database Configuration (Reference Only - RDS managed separately)
+# =============================================================================
+# The RDS MySQL instance is in eu-north-1 region (not managed by this terraform)
+# This is for documentation purposes only.
+
+variable "rds_config" {
+  description = "RDS MySQL configuration reference (managed separately in eu-north-1)"
+  type = object({
+    endpoint = string
+    port     = number
+    engine   = string
+    region   = string
+  })
+  default = {
+    endpoint = "database-1.cn8e0eyq896c.eu-north-1.rds.amazonaws.com"
+    port     = 3306
+    engine   = "mysql"
+    region   = "eu-north-1"
+  }
+}
