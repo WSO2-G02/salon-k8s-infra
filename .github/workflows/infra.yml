@@ -14,7 +14,6 @@ permissions:
 
 env:
   TF_VAR_runner_token: ${{ secrets.RUNNER_TOKEN }}
-  TF_VAR_bucket_name: ${{ secrets.BUCKET_NAME }}
 
 jobs:
   infra:
@@ -39,7 +38,9 @@ jobs:
 
     - name: Terraform Init
       working-directory: terraform
-      run: terraform init
+      run: |
+        terraform init \
+          -backend-config="bucket=${{ secrets.TF_STATE_BUCKET }}" 
 
 #    - name: Terraform Force Unlock
 #      working-directory: terraform
