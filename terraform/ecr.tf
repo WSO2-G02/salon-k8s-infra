@@ -22,22 +22,20 @@ resource "aws_ecr_repository" "repos" {
   }
 }
 
-resource "aws_ecr_lifecycle_policy" "cleanup_policy" {
-  for_each = toset(var.services)
-
-  repository = aws_ecr_repository.repos[each.key].name
+# ECR Lifecycle Policy for Frontend (has staging-* and production images)
+resource "aws_ecr_lifecycle_policy" "frontend_cleanup_policy" {
+  repository = aws_ecr_repository.repos["frontend"].name
 
   policy = jsonencode({
     rules = [
       {
         rulePriority = 1
-        description  = "Expire temporary scan images after 1 day"
+        description  = "Keep last 5 staging images"
         selection = {
           tagStatus     = "tagged"
-          tagPrefixList = ["scan"]
-          countType     = "sinceImagePushed"
-          countUnit     = "days"
-          countNumber   = 1
+          tagPrefixList = ["staging-"]
+          countType     = "imageCountMoreThan"
+          countNumber   = 5
         }
         action = {
           type = "expire"
@@ -45,7 +43,45 @@ resource "aws_ecr_lifecycle_policy" "cleanup_policy" {
       },
       {
         rulePriority = 2
-        description  = "Keep only last 10 production images"
+        description  = "Keep last 10 production images (excludes staging-*)"
+        selection = {
+          tagStatus   = "tagged"
+          tagPatternList = ["*-*"]  # Matches {sha}-{timestamp} pattern
+          countType   = "imageCountMoreThan"
+          countNumber = 10
+        }
+        action = {
+          type = "expire"
+        }
+      },
+      {
+        rulePriority = 3
+        description  = "Delete untagged images after 1 day"
+        selection = {
+          tagStatus   = "untagged"
+          countType   = "sinceImagePushed"
+          countUnit   = "days"
+          countNumber = 1
+        }
+        action = {
+          type = "expire"
+        }
+      }
+    ]
+  })
+}
+
+# ECR Lifecycle Policy for Backend services (simpler - no staging prefix)
+resource "aws_ecr_lifecycle_policy" "backend_cleanup_policy" {
+  for_each = toset([for s in var.services : s if s != "frontend"])
+
+  repository = aws_ecr_repository.repos[each.key].name
+
+  policy = jsonencode({
+    rules = [
+      {
+        rulePriority = 1
+        description  = "Keep last 10 production images"
         selection = {
           tagStatus   = "any"
           countType   = "imageCountMoreThan"
