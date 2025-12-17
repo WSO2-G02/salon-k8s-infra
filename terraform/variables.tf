@@ -1,6 +1,6 @@
 variable "region" {
   type    = string
-  default = "us-east-1" # replace as necessary
+  default = "us-east-2" # replace as necessary
 }
 
 variable "project_name" {
@@ -22,12 +22,12 @@ variable "vpc_cidr" {
 
 variable "public_subnets" {
   type    = list(string)
-  default = ["10.0.1.0/24", "10.0.2.0/24"]
+  default = ["10.0.5.0/24", "10.0.6.0/24"]
 }
 
 variable "private_subnets" {
   type    = list(string)
-  default = ["10.0.10.0/24", "10.0.11.0/24"]
+  default = ["10.0.15.0/24", "10.0.16.0/24"]
 }
 
 # List of Microservices

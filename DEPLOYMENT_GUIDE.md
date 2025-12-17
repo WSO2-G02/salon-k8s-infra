@@ -253,3 +253,38 @@ Wait 30-60 seconds after `terraform apply` for ASG instances to register with pr
 ## License
 
 MIT
+
+## DevOps & Infrastructure Snapshot
+
+Below is a summary of the DevOps components currently configured in this repository, extracted from the living system explorer.
+
+### 🏗️ Infrastructure as Code
+**Terraform** manages the AWS foundation:
+- **VPC:** Dedicated isolated network with Public/Private subnets.
+- **Security:** Tight Security Groups (only ALB public).
+- **Databases:** Managed RDS and MSK (Kafka) clusters.
+- **Automation:** `deploy-k8s.sh` orchestrates Terraform apply.
+
+### ☸️ Kubernetes Provisioning
+**Kubespray (Ansible)** bootstraps the K8s cluster:
+- **Inventory:** Dynamic Python script generates inventory from Terraform output.
+- **Playbooks:** Installs Docker/Containerd, Kubelet, Kube-Proxy, and Networking (Calico).
+- **HA:** Supports multi-control plane setup for high availability.
+
+### 🔄 GitOps & CD
+**ArgoCD** acts as the continuous delivery controller:
+- **App of Apps:** Manages Staging and Production environments as separate applications.
+- **Sync Policy:** Automatic sync ensures cluster state matches git `main` branch.
+- **Bootstrap:** `bootstrap.sh` installs ArgoCD, applies namespaces, and registers apps.
+
+### 🤖 CI Pipelines
+**GitHub Actions** handles integration:
+- **Pull Requests:** Runs unit tests (Pytest) and linters.
+- **Merge:** Builds Docker images, pushes to ECR, and updates Helm/Kustomize manifests.
+
+### Key Automation Scripts
+| Script | Role | Location |
+| :--- | :--- | :--- |
+| `deploy-k8s.sh` | Full infrastructure & cluster bring-up | `salon-k8s-infra/` |
+| `bootstrap.sh` | Installs ArgoCD & applies GitOps apps | `salon-gitops/` |
+| `refresh-inventory.sh` | Updates Ansible inventory from TF state | `salon-k8s-infra/` |

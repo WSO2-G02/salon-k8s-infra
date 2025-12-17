@@ -15,10 +15,8 @@ cd terraform
 rm -f tfplan
 rm -f ../kubespray/inventory/mycluster/hosts.yaml
 
-if [ ! -f ".terraform/terraform.tfstate" ] && [ ! -f "terraform.tfstate" ]; then
-    echo "Initializing Terraform..."
-    terraform init
-fi
+echo "Initializing Terraform..."
+terraform init
 
 echo "Planning infrastructure..."
 terraform plan -out=tfplan
