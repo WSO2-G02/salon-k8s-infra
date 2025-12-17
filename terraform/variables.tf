@@ -88,6 +88,11 @@ variable "gh_runner_version" {
   default     = "2.317.0"
 }
 
+variable "bucket_name" {
+  description = "Name of the S3 bucket used to store the backend"
+  sensitive   = true
+}
+
 # =============================================================================
 # External Database Configuration (Reference Only - RDS managed separately)
 # =============================================================================

@@ -12,6 +12,10 @@ permissions:
   id-token: write
   contents: read
 
+env:
+  TF_VAR_runner_token: ${{ secrets.RUNNER_TOKEN }}
+  TF_VAR_bucket_name: ${{ secrets.BUCKET_NAME }}
+
 jobs:
   infra:
     runs-on: ubuntu-latest
@@ -51,8 +55,6 @@ jobs:
 
     - name: Terraform Plan
       working-directory: terraform
-      env:
-        TF_VAR_runner_token: ${{ secrets.RUNNER_TOKEN }}
       run: terraform plan -out=tfplan # Saves the plan to a file
     
 #    - name: Terraform Destroy

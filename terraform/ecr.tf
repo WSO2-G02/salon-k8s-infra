@@ -45,10 +45,10 @@ resource "aws_ecr_lifecycle_policy" "frontend_cleanup_policy" {
         rulePriority = 2
         description  = "Keep last 10 production images (excludes staging-*)"
         selection = {
-          tagStatus   = "tagged"
-          tagPatternList = ["*-*"]  # Matches {sha}-{timestamp} pattern
-          countType   = "imageCountMoreThan"
-          countNumber = 10
+          tagStatus      = "tagged"
+          tagPatternList = ["*-*"] # Matches {sha}-{timestamp} pattern
+          countType      = "imageCountMoreThan"
+          countNumber    = 10
         }
         action = {
           type = "expire"
