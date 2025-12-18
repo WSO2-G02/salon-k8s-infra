@@ -3,10 +3,11 @@
 terraform {
   backend "s3" {
     key          = "global/terraform_us_east_2.tfstate"
-    region       = "ap-south-1"
+    region       = "us-east-2"
     use_lockfile = true
     encrypt      = true
   }
 }
+
 
 
