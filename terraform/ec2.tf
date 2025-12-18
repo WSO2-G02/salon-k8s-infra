@@ -1,3 +1,5 @@
+# This creates the launch template for ASG
+
 resource "aws_launch_template" "app_lt" {
   name_prefix   = "${var.project_name}-lt"
   image_id      = var.ami_id
@@ -94,4 +96,5 @@ resource "null_resource" "generate_inventory" {
     asg_name = aws_autoscaling_group.app_asg.name
   }
 }
+
 
