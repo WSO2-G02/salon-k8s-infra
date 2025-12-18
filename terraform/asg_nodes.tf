@@ -1,4 +1,4 @@
-# Get ASG details
+# Get ASGs details
 data "aws_autoscaling_group" "k8s" {
   name = aws_autoscaling_group.app_asg.name
 }
