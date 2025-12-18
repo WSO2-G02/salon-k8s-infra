@@ -38,9 +38,7 @@ jobs:
 
     - name: Terraform Init
       working-directory: terraform
-      run: |
-        terraform init \
-          -backend-config="bucket=${{ secrets.BUCKET_NAME }}" 
+      run: terraform init
 
 #    - name: Terraform Force Unlock
 #      working-directory: terraform
@@ -112,4 +110,5 @@ jobs:
         run: |
           ansible-playbook -i inventory/mycluster/hosts.yaml \
             --become --become-user=root \
+
             cluster.yml
