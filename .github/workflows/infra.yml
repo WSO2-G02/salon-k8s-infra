@@ -38,8 +38,10 @@ jobs:
 
     - name: Terraform Init
       working-directory: terraform
-      run: terraform init
-
+      run: |
+        terraform init \
+          -backend-config="bucket=${{ secrets.BUCKET_NAME }}" 
+          
 #    - name: Terraform Force Unlock
 #      working-directory: terraform
 #      run: terraform force-unlock -force 916dbd11-f9bd-bc04-b6e1-62834d384707
@@ -112,3 +114,4 @@ jobs:
             --become --become-user=root \
 
             cluster.yml
+
