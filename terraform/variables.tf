@@ -1,6 +1,6 @@
 variable "region" {
   type    = string
-  default = "ap-south-1" # replace as necessary
+  default = "us-east-2" # replace as necessary
 }
 
 variable "project_name" {
