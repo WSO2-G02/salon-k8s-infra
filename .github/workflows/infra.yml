@@ -73,6 +73,11 @@ jobs:
       working-directory: terraform
       run: terraform output -json > tf.json
 
+    - name: Debug ASG name
+      working-directory: terraform
+      run: |
+        terraform output -raw asg_name
+        
     - name: Generate inventory
       working-directory: terraform
       run: |
