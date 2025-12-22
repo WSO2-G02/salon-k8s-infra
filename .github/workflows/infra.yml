@@ -80,7 +80,7 @@ jobs:
         bash generate_inventory.sh salon-app "$ASG_NAME" 4
     
     - name: Upload inventory
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: kubespray-inventory
         path: kubespray/inventory/mycluster
@@ -102,7 +102,7 @@ jobs:
           aws-region: us-east-2
 
       - name: Download inventory
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: kubespray-inventory
           path: kubespray/inventory
