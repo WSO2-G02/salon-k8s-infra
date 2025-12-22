@@ -77,7 +77,7 @@ jobs:
       id: asg
       working-directory: terraform
       run: |
-        echo "asg_name=$(terraform output -raw asg_name)" >> $GITHUB_ENV
+        echo "asg_name=$(terraform output asg_name)" >> $GITHUB_ENV
 
     - name: Generate inventory
       if: github.event_name == 'workflow_dispatch'
