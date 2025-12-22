@@ -76,7 +76,7 @@ jobs:
     - name: Debug ASG name
       working-directory: terraform
       run: |
-        ASG_NAME=$(terraform output -raw asg_name | tr -d '\r\n')
+        ASG_NAME=$(terraform output asg_name)
         echo "ASG_NAME=$ASG_NAME"
 
     - name: Generate inventory
