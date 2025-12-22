@@ -8,21 +8,21 @@ apt-get update -y
 apt-get install -y curl jq git sudo tar unzip
 
 # -----------------------------
-# Create runner directory
+# Create runner directory and switch to ubuntu user
 # -----------------------------
-mkdir -p /actions-runner
-cd /actions-runner
+sudo -u ubuntu mkdir -p /home/ubuntu/actions-runner
+cd /home/ubuntu/actions-runner
 
 # -----------------------------
 # Download & extract GitHub Runner
 # -----------------------------
-curl -o runner.tar.gz -L https://github.com/actions/runner/releases/download/v${GH_RUNNER_VERSION}/actions-runner-linux-x64-${GH_RUNNER_VERSION}.tar.gz
-tar xzf runner.tar.gz
+sudo -u ubuntu curl -o runner.tar.gz -L https://github.com/actions/runner/releases/download/v${GH_RUNNER_VERSION}/actions-runner-linux-x64-${GH_RUNNER_VERSION}.tar.gz
+sudo -u ubuntu tar xzf runner.tar.gz
 
 # -----------------------------
 # Configure runner
 # -----------------------------
-./config.sh \
+sudo -u ubuntu ./config.sh \
   --url https://github.com/${github_repo} \
   --token ${runner_token} \
   --labels "kubespray-runner" \
@@ -32,9 +32,9 @@ tar xzf runner.tar.gz
 # -----------------------------
 # Install and enable as systemd service
 # -----------------------------
-./svc.sh install
-./svc.sh enable
-./svc.sh start
+sudo -u ubuntu ./svc.sh install
+sudo -u ubuntu ./svc.sh enable
+sudo -u ubuntu ./svc.sh start
 
 # -----------------------------
 # Logging
