@@ -1,5 +1,5 @@
 
-# EC2 Role for K8s Nodes / Runner
+# EC2 Role for K8s Nodes
 
 resource "aws_iam_role" "ssm_ec2_role" {
   name = "salon-app-ssm-ec2-role"
