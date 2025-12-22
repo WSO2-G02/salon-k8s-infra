@@ -1,4 +1,4 @@
-# S3 Bucket for Terraform Stat File
+# S3 Bucket for Terraform State File
 
 terraform {
   backend "s3" {
