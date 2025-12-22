@@ -1,4 +1,4 @@
-# S3 Bucket for Terraform State Fie
+# S3 Bucket for Terraform State File
 
 terraform {
   backend "s3" {
