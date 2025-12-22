@@ -73,6 +73,20 @@ jobs:
       working-directory: terraform
       run: terraform output -json > tf.json
 
+    - name: Generate inventory
+      working-directory: terraform
+      run: |
+        ASG_NAME=$(cd terraform && terraform output -raw asg_name)
+        bash generate_inventory.sh salon-app "$ASG_NAME" 4
+    
+    - name: Upload inventory
+      uses: actions/upload-artifact@v3
+      with:
+        name: kubespray-inventory
+        path: kubespray/inventory/mycluster
+
+      
+
 
   kubespray:
     if: github.event_name == 'workflow_dispatch'
@@ -81,26 +95,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: us-east-2
 
-      - name: Terraform Init (read-only)
-        working-directory: terraform
-        run: |
-          terraform init \
-            -backend-config="bucket=${{ secrets.BUCKET_NAME }}"
-
-      - name: Generate inventory
-        working-directory: terraform
-        run: |
-          ASG_NAME=$(cd terraform && terraform output -raw asg_name)
-          bash generate_inventory.sh salon-app "$ASG_NAME" 4
+      - name: Download inventory
+        uses: actions/download-artifact@v3
+        with:
+          name: kubespray-inventory
+          path: kubespray/inventory
 
       - name: Install requirements
         run: |
