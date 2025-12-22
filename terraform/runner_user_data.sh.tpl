@@ -32,9 +32,9 @@ sudo -u ubuntu ./config.sh \
 # -----------------------------
 # Install and enable as systemd service
 # -----------------------------
-sudo -u ubuntu ./svc.sh install
-sudo -u ubuntu ./svc.sh enable
-sudo -u ubuntu ./svc.sh start
+sudo ./svc.sh install
+sudo ./svc.sh enable
+sudo ./svc.sh start
 
 # -----------------------------
 # Logging
