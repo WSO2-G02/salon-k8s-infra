@@ -27,7 +27,7 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-        aws-region: ap-south-1
+        aws-region: us-east-2
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
@@ -58,31 +58,21 @@ jobs:
       working-directory: terraform
       run: terraform plan -out=tfplan # Saves the plan to a file
     
-    - name: Terraform Destroy
-      working-directory: terraform
-      run: terraform destroy -auto-approve # Destroys created resources
+#    - name: Terraform Destroy
+#      working-directory: terraform
+#      run: terraform destroy -auto-approve # Destroys created resources
 
 #     OPTIONAL — only run manually!
     - name: Terraform Apply
       if: github.event_name == 'workflow_dispatch'
       working-directory: terraform
-      env:
-        TF_VAR_runner_token: ${{ secrets.RUNNER_TOKEN }}
       run: terraform apply -auto-approve
 
     - name: Export Terraform output
       if: github.event_name == 'workflow_dispatch'
       working-directory: terraform
-      env:
-        TF_VAR_runner_token: ${{ secrets.RUNNER_TOKEN }}
       run: terraform output -json > tf.json
 
-    - name: Upload outputs
-      if: github.event_name == 'workflow_dispatch'
-      uses: actions/upload-artifact@v4
-      with:
-        name: tf
-        path: terraform/tf.json
 
   kubespray:
     if: github.event_name == 'workflow_dispatch'
@@ -91,10 +81,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download Terraform outputs
-        uses: actions/download-artifact@v4
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          name: tf
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-2
+
+      - name: Terraform Init (read-only)
+        working-directory: terraform
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ secrets.BUCKET_NAME }}"
+
+      - name: Generate inventory
+        working-directory: terraform
+        run: |
+          ASG_NAME=$(cd terraform && terraform output -raw asg_name)
+          bash generate_inventory.sh salon-app "$ASG_NAME" 4
 
       - name: Install requirements
         run: |
@@ -102,15 +105,11 @@ jobs:
           sudo apt install -y python3-pip ansible sshpass
           pip3 install -r kubespray/requirements.txt
 
-      - name: Generate Kubespray inventory
-        run: |
-          python3 scripts/generate_inventory.py tf.json
-
       - name: Run Kubespray
         run: |
-          ansible-playbook -i inventory/mycluster/hosts.yaml \
+          ansible-playbook \
+            -i kubespray/inventory/mycluster/hosts.yaml \
             --become --become-user=root \
-
-            cluster.yml
+            kubespray/cluster.yml
 
 

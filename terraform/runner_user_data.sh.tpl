@@ -1,27 +1,42 @@
-locals {
-  runner_user_data = <<-EOF
-    #!/bin/bash
-    set -e
+#!/bin/bash
+set -e
 
-    # Basic tools
-    apt-get update -y
-    apt-get install -y curl jq git
+# -----------------------------
+# Install dependencies
+# -----------------------------
+apt-get update -y
+apt-get install -y curl jq git sudo tar unzip
 
-    # Install GitHub Runner
-    mkdir -p /actions-runner
-    cd /actions-runner
-    curl -o runner.tar.gz -L https://github.com/actions/runner/releases/download/v${GH_RUNNER_VERSION}/actions-runner-linux-x64-${GH_RUNNER_VERSION}.tar.gz
-    tar xzf runner.tar.gz
+# -----------------------------
+# Create runner directory
+# -----------------------------
+mkdir -p /actions-runner
+cd /actions-runner
 
-    # Create runner service
-    ./config.sh \
-      --url https://github.com/${github_repo} \
-      --token ${runner_token} \
-      --labels "kubespray-runner" \
-      --unattended \
-      --replace
+# -----------------------------
+# Download & extract GitHub Runner
+# -----------------------------
+curl -o runner.tar.gz -L https://github.com/actions/runner/releases/download/v${GH_RUNNER_VERSION}/actions-runner-linux-x64-${GH_RUNNER_VERSION}.tar.gz
+tar xzf runner.tar.gz
 
-    ./svc.sh install
-    ./svc.sh start
-  EOF
-}
+# -----------------------------
+# Configure runner
+# -----------------------------
+./config.sh \
+  --url https://github.com/${github_repo} \
+  --token ${runner_token} \
+  --labels "kubespray-runner" \
+  --unattended \
+  --replace
+
+# -----------------------------
+# Install and enable as systemd service
+# -----------------------------
+./svc.sh install
+./svc.sh enable
+./svc.sh start
+
+# -----------------------------
+# Logging
+# -----------------------------
+echo "GitHub runner setup complete at $(date)" >> /var/log/github-runner.log

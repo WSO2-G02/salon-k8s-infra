@@ -89,29 +89,6 @@ resource "aws_autoscaling_group" "app_asg" {
   health_check_grace_period = 300
 }
 
-data "aws_instances" "asg_instances" {
-  filter {
-    name   = "tag:aws:autoscaling:groupName"
-    values = [aws_autoscaling_group.app_asg.name]
-  }
-
-  instance_state_names = ["running"]
-
-  depends_on = [aws_autoscaling_group.app_asg]
-}
-
-resource "null_resource" "generate_inventory" {
-  depends_on = [aws_autoscaling_group.app_asg]
-
-  provisioner "local-exec" {
-    command     = "bash generate_inventory.sh ${var.desired_capacity}"
-    interpreter = ["/bin/bash", "-c"]
-  }
-
-  triggers = {
-    asg_name = aws_autoscaling_group.app_asg.name
-  }
-}
 
 
 
