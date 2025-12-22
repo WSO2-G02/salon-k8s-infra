@@ -82,7 +82,7 @@ jobs:
     - name: Generate inventory
       working-directory: terraform
       run: |
-        ASG_NAME=$(terraform output -raw asg_name | tr -d '\r\n')
+        ASG_NAME=$(terraform output asg_name)
         bash generate_inventory.sh salon-app "$ASG_NAME" 4
     
     - name: Upload inventory
