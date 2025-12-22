@@ -73,18 +73,18 @@ jobs:
       working-directory: terraform
       run: terraform output -json > tf.json
 
-    - name: Debug ASG name
-      if: github.event_name == 'workflow_dispatch'
+    - name: Terraform output ASG
+      id: asg
       working-directory: terraform
       run: |
-        ASG_NAME=$(terraform output -json asg_name | jq -r '.value')
-        echo "ASG_NAME=$ASG_NAME"
+        echo "asg_name=$(terraform output -raw asg_name)" >> $GITHUB_ENV
 
     - name: Generate inventory
       if: github.event_name == 'workflow_dispatch'
       working-directory: terraform
+      env:
+        ASG_NAME: ${{ env.asg_name }}
       run: |
-        ASG_NAME=$(terraform output asg_name)
         bash generate_inventory.sh salon-app "$ASG_NAME" 4
     
     - name: Upload inventory
