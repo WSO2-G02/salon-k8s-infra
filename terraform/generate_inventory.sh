@@ -5,7 +5,7 @@ CLUSTER_NAME="${1:-salon-app}"
 ASG_NAME="${2}"
 EXPECTED_NODES="${3:-4}"
 
-echo "⏳ Waiting for $EXPECTED_NODES EC2 instances in ASG: $ASG_NAME"
+echo "Waiting for $EXPECTED_NODES EC2 instances in ASG: $ASG_NAME"
 
 while true; do
   COUNT=$(aws ec2 describe-instances \
@@ -19,7 +19,7 @@ while true; do
   sleep 10
 done
 
-echo "✅ Found $COUNT running instances"
+echo "Found $COUNT running instances"
 
 # Fetch instance data
 INSTANCES=$(aws ec2 describe-instances \
