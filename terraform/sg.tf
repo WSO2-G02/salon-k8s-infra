@@ -163,7 +163,7 @@ resource "aws_security_group" "elb_sg" {
 
 }
 
-# Runner Security group
+# Runner Security grou
 
 resource "aws_security_group" "runner_sg" {
   name        = "${var.project_name}-runner-sg"
