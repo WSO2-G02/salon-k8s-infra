@@ -22,12 +22,12 @@ variable "vpc_cidr" {
 
 variable "public_subnets" {
   type    = list(string)
-  default = ["10.0.1.0/24", "10.0.2.0/24"]
+  default = ["10.0.1.0/24"]
 }
 
 variable "private_subnets" {
   type    = list(string)
-  default = ["10.0.10.0/24", "10.0.11.0/24"]
+  default = ["10.0.10.0/24"]
 }
 
 # List of Microservices
@@ -48,12 +48,6 @@ variable "services" {
 variable "instance_type" {
   type    = string
   default = "t3.large"
-}
-
-variable "ami_id" {
-  type        = string
-  description = "AMI ID for EC2 instances"
-  default     = "ami-0ade68f094cc81635"
 }
 
 # Autoscaling variables

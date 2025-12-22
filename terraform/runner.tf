@@ -1,5 +1,5 @@
 resource "aws_instance" "github_runner" {
-  ami                         = var.ami_id
+  ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.medium"
   subnet_id                   = values(aws_subnet.public)[0].id
   security_groups             = [aws_security_group.runner_sg.id]

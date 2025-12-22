@@ -1,8 +1,24 @@
-# This creates the launch template
+# Data source for ami ID (region independent)
 
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"] # Canonical
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
+# This creates the launch template
 resource "aws_launch_template" "app_lt" {
   name_prefix   = "${var.project_name}-lt"
-  image_id      = var.ami_id
+  image_id      = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
   key_name      = aws_key_pair.salon_key.key_name
 
